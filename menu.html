@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>BurguerMax — Menu Digital</title>
+  <style>
+    :root {
+      --bg:       #0d0d0d;
+      --bg-card:  #1a1a1a;
+      --gold:     #F5C014;
+      --gold-dim: #c99a00;
+      --white:    #ffffff;
+      --muted:    #888888;
+      --border:   #2a2a2a;
+      --red:      #e03030;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: #000;
+      border-bottom: 3px solid var(--gold);
+      padding: 10px 12px 8px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+    }
+    .logo-wrap { display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .logo-circle {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid #fff;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .logo-circle img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .brand { line-height: 1.1; text-align: left; }
+    .brand-name  { font-size: clamp(1.1rem, 5vw, 2rem); font-weight: 900; color: var(--gold); letter-spacing: clamp(1px, 0.4vw, 3px); text-transform: uppercase; white-space: nowrap; }
+    .brand-sub   { font-size: clamp(0.55rem, 1.8vw, 0.7rem); color: var(--muted); letter-spacing: clamp(1px, 0.3vw, 2px); text-transform: uppercase; margin-top: 2px; }
+
+    /* ── SEARCH ── */
+    .search-wrap { background: #000; padding: 10px 14px; }
+    .search-input {
+      width: 100%; background: #1a1a1a; border: 1px solid var(--border);
+      border-radius: 8px; padding: 10px 16px; color: var(--white);
+      font-size: 14px; outline: none; transition: border-color .2s;
+    }
+    .search-input::placeholder { color: var(--muted); }
+    .search-input:focus { border-color: var(--gold); }
+
+    /* ── CATEGORY NAV ── */
+    .cat-nav {
+      background: #080808; border-bottom: 1px solid var(--border);
+      overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .cat-nav::-webkit-scrollbar { display: none; }
+    .cat-inner { display: flex; gap: 6px; padding: 10px 12px; min-width: max-content; }
+    .cat-btn {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px;
+      color: var(--muted); padding: 7px 15px; font-size: 12px; cursor: pointer;
+      white-space: nowrap; transition: all .2s; display: flex; align-items: center; gap: 5px;
+      font-family: inherit;
+    }
+    .cat-btn.active { background: var(--gold); color: #000; border-color: var(--gold); font-weight: 700; }
+
+    /* ── SECTION ── */
+    .menu-section { padding: 0 12px 28px; }
+    .sec-head {
+      display: flex; align-items: center; gap: 10px;
+      padding: 22px 4px 14px;
+    }
+    .sec-icon  { font-size: 1.4rem; }
+    .sec-title { font-size: 1.35rem; font-weight: 900; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; }
+    .sec-line  { flex: 1; height: 1px; background: var(--border); }
+
+    /* ── GRID ── */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 12px;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: transform .2s, border-color .2s;
+    }
+    .card:hover { transform: translateY(-3px); border-color: var(--gold); }
+
+    .card-img {
+      height: 130px; display: flex; align-items: center; justify-content: center;
+      font-size: 3.2rem; position: relative; overflow: hidden;
+    }
+    .card-body { padding: 12px; flex: 1; display: flex; flex-direction: column; }
+    .card-name { font-size: .92rem; font-weight: 700; color: var(--white); margin-bottom: 4px; line-height: 1.3; }
+    .card-desc { font-size: .75rem; color: var(--muted); line-height: 1.45; flex: 1; margin-bottom: 10px; }
+    .card-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .card-price { font-size: 1.15rem; font-weight: 900; color: var(--gold); }
+    .card-price::before { content: '$'; font-size: .8rem; opacity: .7; }
+
+    .badge {
+      font-size: .62rem; padding: 2px 8px; border-radius: 10px;
+      font-weight: 700; text-transform: uppercase; white-space: nowrap;
+    }
+    .badge-red  { background: var(--red); color: #fff; }
+    .badge-gold { background: var(--gold); color: #000; }
+
+    /* ── NO RESULTS ── */
+    .no-results { text-align: center; padding: 60px 20px; color: var(--muted); display: none; }
+    .no-results-icon { font-size: 3rem; margin-bottom: 10px; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #000; border-top: 2px solid var(--gold);
+      padding: 22px 16px; text-align: center;
+    }
+    .foot-brand { font-size: 1.1rem; font-weight: 900; color: var(--gold); letter-spacing: 2px; }
+    .foot-note  { font-size: .72rem; color: var(--muted); margin-top: 4px; }
+
+    /* ── UTILITY ── */
+    .hidden { display: none !important; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 480px) {
+      .brand-name { font-size: 1.5rem; }
+      .menu-grid  { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .card-img   { height: 95px; font-size: 2.2rem; }
+      .card-body  { padding: 8px; }
+      .card-name  { font-size: .78rem; }
+      .card-desc  { font-size: .68rem; }
+      .card-price { font-size: 1rem; }
+    }
+    @media (min-width: 600px) {
+      header { padding: 14px 20px 12px; }
+      .logo-circle { width: 54px; height: 54px; font-size: 26px; }
+      .logo-wrap { gap: 14px; }
+    }
+    @media (min-width: 900px) {
+      .menu-section { padding: 0 24px 36px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-wrap">
+    <div class="logo-circle"><img src="Max.png" alt="BurguerMax" onerror="this.parentElement.innerHTML='🍔'"></div>
+    <div class="brand">
+      <div class="brand-name">BurguerMax</div>
+      <div class="brand-sub">Menu Digital</div>
+    </div>
+  </div>
+</header>
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <input type="search" class="search-input" id="searchInput" placeholder="🔍  Buscar plato..." oninput="filterMenu()">
+</div>
+
+<!-- CATEGORY NAV -->
+<nav class="cat-nav">
+  <div class="cat-inner" id="catInner"></div>
+</nav>
+
+<!-- MENU MAIN -->
+<main id="menuMain"></main>
+
+<!-- NO RESULTS -->
+<div class="no-results" id="noResults">
+  <div class="no-results-icon">🔍</div>
+  <p>No se encontraron platos</p>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-brand">BURGUERMAX</div>
+  <div class="foot-note">Menu Digital — Precios en pesos colombianos</div>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════════
+   DATOS DEL MENU
+══════════════════════════════════════════════ */
+const MENU = [
+  {
+    id: 'hamburguesas',
+    title: 'Hamburguesas',
+    icon: '🍔',
+    bg: 'linear-gradient(135deg,#2d0a00,#1a0000)',
+    items: [
+      { name:'Hamburguesa Sencilla + Papas',      desc:'120gr de Carne, Lechuga, Tomate, Cebolla Grille',                                                              price:'12.000' },
+      { name:'Combo Hamburguesas 2x1',             desc:'120gr de Carne, Lechuga, Tomate, Cebolla Grille',                                                              price:'19.500', badge:'2x1',  badgeType:'badge-red' },
+      { name:'Combo Hamburguesas 2x1 + Papas',     desc:'120gr de Carne, Lechuga, Tomate, Cebolla Grille',                                                              price:'22.000', badge:'2x1',  badgeType:'badge-red' },
+      { name:'Hamburguesa Doble + Papas',          desc:'120gr de Doble Carne, Lechuga, Tomate, Cebolla Grille, Queso',                                                 price:'22.000' },
+      { name:'Hamburguesa Pollo Apanado + Papas',  desc:'120gr de Pollo Apanado, Lechuga, Tomate, Cebolla Grille',                                                      price:'14.000' },
+      { name:'Hamburguesa Ranchera + Papas',       desc:'120gr de Carne, Chorizo Ranchero, Lechuga, Tomate, Cebolla Grille',                                            price:'19.500' },
+      { name:'Hamburguesa Especial + Papas',       desc:'120gr de Carne, Tocineta, Lechuga, Tomate, Cebolla Grille',                                                    price:'19.500' },
+      { name:'Hamburguesa de Guacamole + Papas',   desc:'120gr de Carne, Salsa de Guacamole, Doble Tocineta, Tomate, Cebolla Grille',                                   price:'18.500' },
+      { name:'Hamburguesa Inglesa + Papas',        desc:'120gr de Carne, Aros de Cebolla, Tomate, Cebolla Grille',                                                      price:'19.500' },
+      { name:'Hamburguesa Mexicana + Papas',       desc:'120gr de Carne, Chile de Carne y Frijol, Tocineta, Tomate, Cebolla Grille',                                    price:'19.500' },
+      { name:'Hamburguesa Hawaiana + Papas',       desc:'120gr de Carne, Piña a la Plancha, Tocineta, Tomate, Cebolla Grille',                                          price:'18.500' },
+      { name:'Hamburguesa Mixta Doble + Papas',    desc:'120gr de Carne, Pollo Apanado, Doble Tocineta, Piña a la Plancha, Lechuga, Tomate, Cebolla Grille',            price:'22.000' },
+      { name:'Hamburguesa Habanero + Papas',       desc:'120gr de Carne, Chorizo, Doble Tocineta, Tomate, Cebolla Grille',                                              price:'19.500' },
+      { name:'Burger Anglu + Papas',               desc:'120gr de Carne, Pechuga a la Plancha, Salsa Champiñones, Jamon, Queso Mozzarella',                             price:'22.000' },
+      { name:'Croky Burger + Papas',               desc:'120gr de Carne, Nachos, Doble Tocineta, Salsa de Mango Picante, Queso Cheddar',                                price:'19.500' },
+      { name:'Super Criolla + Papas',              desc:'120gr de Carne, Pollo Apanado, Huevo Frito, Porcion de Patacon',                                               price:'22.000' },
+    ]
+  },
+  {
+    id: 'perros',
+    title: 'Perros Calientes',
+    icon: '🌭',
+    bg: 'linear-gradient(135deg,#2d1500,#1a0800)',
+    items: [
+      { name:'Combo Hotdog Clasico 2x1',   desc:'Salchicha Americana, Cebolla Grille, Huevo de Codorniz',                                   price:'15.000', badge:'2x1', badgeType:'badge-red' },
+      { name:'Super Hotdog + Papas',        desc:'Salchicha Americana, Cebolla Grille, Tocineta',                                            price:'12.500' },
+      { name:'Hotdog Ranchero + Papas',     desc:'Cebolla Grille, Tocineta, Chorizo Ranchero',                                              price:'13.000' },
+      { name:'Hotdog Clasico Americano',    desc:'Salchicha Americana, Cebolla Grille, Tocineta',                                            price:'10.500' },
+      { name:'Hotdog Mexicano + Papas',     desc:'Salchicha Americana, Chile de Carne y Frijol, Tocineta',                                   price:'14.500' },
+      { name:'Hotdog Criollo + Papas',      desc:'Cebolla Grille, Trozos de Pollo a la Plancha, Maicitos, Tocineta, Chorizo y Queso',        price:'14.500' },
+    ]
+  },
+  {
+    id: 'salchimax',
+    title: 'Salchi Max',
+    icon: '🍟',
+    bg: 'linear-gradient(135deg,#2d2000,#1a1200)',
+    items: [
+      { name:'Salchipapa',           desc:'Papa Francesa, Salchicha Americana, Queso, Huevo de Codorniz',                                                            price:'12.500' },
+      { name:'Salchipapa Especial',  desc:'Papa Francesa, Salchicha Americana, Queso, Huevo de Codorniz, Carne y Pollo Desmechado',                                  price:'17.000' },
+      { name:'Choripapa',            desc:'Papa Francesa, Chorizo, Queso, Huevo de Codorniz',                                                                        price:'13.500' },
+      { name:'Choripapa Especial',   desc:'Papa Francesa, Chorizo, Queso, Huevo de Codorniz, Carne y Pollo Desmechado',                                              price:'17.500' },
+      { name:'Mega Salchi',          desc:'Papa Francesa, Salchicha Americana, Queso, Huevo de Codorniz, Longaniza, Carne y Pollo a la Plancha en Trozos',           price:'18.500' },
+      { name:'Salchipapa Criollo',   desc:'Papa Criolla, Salchicha Americana, Maduritos, Queso, Carne a la Plancha en Trozos',                                       price:'18.500' },
+      { name:'Nuggets de Pollo',     desc:'Unidades de Nuggets, Papas Francesas, Huevos de Codorniz y Ensalada',                                                     price:'14.000' },
+    ]
+  },
+  {
+    id: 'carnes',
+    title: 'Carnes Especiales',
+    icon: '🥩',
+    bg: 'linear-gradient(135deg,#200000,#2d0505)',
+    items: [
+      { name:'Churrasco 300gr',                    desc:'300gr de Carne, Papas Francesas, Ensalada',                                                                          price:'28.000' },
+      { name:'Churrasquito 250gr',                 desc:'250gr de Carne, Papas Francesas, Ensalada',                                                                          price:'25.500' },
+      { name:'Lomo de Cerdo a la Plancha',         desc:'250gr de Carne de Cerdo, Papas Francesas, Ensalada',                                                                 price:'25.500' },
+      { name:'Lomo de Cerdo en Salsa de Champiñones', desc:'250gr de Carne de Cerdo, Papas Francesas, Ensalada',                                                              price:'27.000' },
+      { name:'Patacon Mixto',                      desc:'Carne y Pollo Desmechado, Maicitos, Queso, Huevo de Codorniz, Papas Francesas, Ensalada',                            price:'17.900' },
+      { name:'Patacon Pollo con Champiñones',      desc:'Pollo, Champiñones, Queso, Papas Francesas, Ensalada',                                                               price:'16.500' },
+      { name:'Patacon de Res Carne Desmechada',    desc:'Carne Desmechada, Queso, Ensalada, Papas Francesas',                                                                 price:'19.000' },
+      { name:'Patacon Ranchero',                   desc:'Carne de Res, Tocineta, Chorizo, Papas Francesas, Ensalada',                                                         price:'19.500' },
+      { name:'Costillas BBQ',                      desc:'350gr de Costilla, Papas Francesas, Ensalada',                                                                       price:'25.000' },
+      { name:'Alitas BBQ',                         desc:'4 Alitas Completas, Papas a la Francesa',                                                                            price:'17.000' },
+      { name:'Pechuga a la Plancha',               desc:'200gr de Pechuga, Papas Francesas, Ensalada',                                                                       price:'24.000' },
+      { name:'Pechuga en Salsa de Champiñones',    desc:'200gr de Pechuga, Papas Francesas, Ensalada',                                                                       price:'25.500' },
+      { name:'Mixto 3 Carnes',                     desc:'Carne, Pechuga a la Plancha, Chorizo, Papas Francesas, Ensalada',                                                    price:'28.000' },
+    ]
+  },
+  {
+    id: 'tastys',
+    title: "Tasty's",
+    icon: '🍽️',
+    bg: 'linear-gradient(135deg,#0a0a2d,#050515)',
+    items: [
+      { name:"Tasty' Ranchero",                desc:'Papas Francesas, Maduritos, Cerdo a la Plancha, Chorizo, Tocineta',           price:'19.000' },
+      { name:"Tasty's Ropa Vieja",             desc:'Papas Francesas, Maduritos, Carne Desmechada',                                price:'16.500' },
+      { name:"Tasty's Pollo con Champiñones",  desc:'Papas Francesas, Maduritos, Pollo con Champiñones',                           price:'16.500' },
+      { name:"Tasty's Mixto",                  desc:'Papas Francesas, Maduritos, Salchicha Americana, Carne de Hamburguesa',       price:'16.500' },
+      { name:"Tasty's Criollo",                desc:'Papas Francesas, Maduritos, Tocineta, Salchicha, Maicitos, Papas en Fosforo', price:'16.500' },
+      { name:'Mazorcada',                      desc:'Maicitos, Pollo Desmechado, Queso, Papas en Fosforo',                        price:'16.000' },
+      { name:'Mazorcada Mixta',                desc:'Maicitos, Carne y Pollo Desmechado, Queso, Papas en Fosforo',                price:'16.500' },
+      { name:'Mazorcada Ranchera',             desc:'Maicitos, Carne Desmechada, Tocineta, Chorizo, Queso, Papas en Fosforo',     price:'17.000' },
+    ]
+  },
+  {
+    id: 'papitas',
+    title: 'Papitas y Mas',
+    icon: '🥔',
+    bg: 'linear-gradient(135deg,#1a1000,#0d0800)',
+    items: [
+      { name:'Desgranado',                desc:'Trozos de Pollo y Carne a la Plancha, Chorizo, Longaniza, Papas Francesa, Maicitos y Papas en Fosforo', price:'23.000' },
+      { name:'Parrillerito',              desc:'Papa Criolla, Maduritos, Lomo de Cerdo, Costillas, Chorizo',                                             price:'27.000' },
+      { name:'Parrillada',               desc:'Pechuga, Carne de Res y Cerdo a la Plancha, Chorizo, Papas en Casco y Croquetas de Yuca',                price:'27.000' },
+      { name:'Parrillada (3 Personas)',   desc:'Pechuga, Carne de Res y Cerdo a la Plancha, Chorizo, Longaniza, Papas en Casco y Croquetas de Yuca',    price:'60.000', badge:'3 Personas', badgeType:'badge-gold' },
+      { name:'Maduritos',                desc:'Chorizo, Longaniza y Queso',                                                                              price:'14.500' },
+      { name:'Nachos',                   desc:'Chile de Carne y Frijol, Queso Cheddar',                                                                 price:'17.000' },
+    ]
+  },
+  {
+    id: 'pizzas',
+    title: 'Pizzas',
+    icon: '🍕',
+    bg: 'linear-gradient(135deg,#1a0d00,#2d1500)',
+    items: [
+      { name:'Pizza Familiar',                  desc:'8 Porciones',                                      price:'60.000', badge:'8 Porciones', badgeType:'badge-gold' },
+      { name:'Pizza Pollo con Champiñones',      desc:'Pollo, Champiñones, Queso',                        price:'8.000'  },
+      { name:'Pizza Hawaiana',                   desc:'Piña, Jamon, Queso',                               price:'8.000'  },
+      { name:'Pizza Criolla',                    desc:'Carne Desmechada, Maicitos, Jamon, Queso',         price:'8.000'  },
+    ]
+  },
+  {
+    id: 'creps',
+    title: 'Creps',
+    icon: '🥞',
+    bg: 'linear-gradient(135deg,#1a0d05,#0d0500)',
+    items: [
+      { name:'Crep de Dulce con Helado + Papas',  desc:'Crep dulce con helado acompañado de papas',      price:'16.500' },
+      { name:'Crep Pollo con Champiñones + Papas', desc:'Crep relleno de pollo con champiñones y papas', price:'16.500' },
+      { name:'Crep Ropa Vieja + Papas',            desc:'Crep relleno de carne desmechada y papas',      price:'16.500' },
+    ]
+  },
+  {
+    id: 'adicionales',
+    title: 'Adicionales',
+    icon: '➕',
+    bg: 'linear-gradient(135deg,#111111,#1c1c1c)',
+    items: [
+      { name:'Porcion Papas a la Francesa',  desc:'',    price:'5.500' },
+      { name:'Porcion Maduritos',            desc:'',    price:'4.000' },
+      { name:'Porcion Aros de Cebolla',      desc:'',    price:'6.000' },
+      { name:'Porcion Huevos de Codorniz',   desc:'x10', price:'6.000' },
+      { name:'Porcion Tocineta',             desc:'',    price:'1.600' },
+      { name:'Porcion Chorizo',              desc:'',    price:'3.000' },
+      { name:'Porcion Salchicha Americana',  desc:'',    price:'2.800' },
+      { name:'Porcion de Yuca',              desc:'',    price:'4.000' },
+      { name:'Porcion Carne de Hamburguesa', desc:'',    price:'6.000' },
+      { name:'Porcion Jalapenos',            desc:'',    price:'5.500' },
+      { name:'Porcion de Queso',             desc:'',    price:'1.500' },
+      { name:'Porcion Papa Criolla',         desc:'',    price:'6.000' },
+      { name:'Porcion Papas en Casco',       desc:'',    price:'6.000' },
+      { name:'Porcion Pollo Apanado',        desc:'',    price:'6.000' },
+    ]
+  },
+  {
+    id: 'bebidas',
+    title: 'Bebidas',
+    icon: '🥤',
+    bg: 'linear-gradient(135deg,#001a10,#000d07)',
+    items: [
+      { name:'Limonada de Mango Biche',         desc:'Limonada natural de mango biche',              price:'8.000' },
+      { name:'Limonada Natural',                desc:'Limonada natural tradicional',                  price:'5.500' },
+      { name:'Limonada de Coco',                desc:'Limonada con coco',                             price:'8.000' },
+      { name:'Limonada de Panela',              desc:'Limonada endulzada con panela',                 price:'6.000' },
+      { name:'Limonada de Hierba Buena',        desc:'Limonada con hierba buena fresca',              price:'6.000' },
+      { name:'Limonada de Coco Frutos Rojos',   desc:'Limonada de coco con frutos rojos',             price:'8.000' },
+      { name:'Cerezada',                        desc:'Bebida de cereza natural',                      price:'8.000' },
+      { name:'Mandarinade',                     desc:'Bebida natural de mandarina',                   price:'8.000' },
+      { name:'Bebida de Coco Cafe',             desc:'Bebida especial de coco con cafe',              price:'9.500' },
+      { name:'Jugos en Leche',                  desc:'Guanabana, Mora, Fresa, Maracuya, Mango, Lulo', price:'7.000' },
+      { name:'Jugos Naturales',                 desc:'Guanabana, Mora, Fresa, Maracuya, Mango, Lulo', price:'5.500' },
+      { name:'Cerveza en Lata',                 desc:'',                                              price:'6.000' },
+      { name:'Club Colombia',                   desc:'',                                              price:'6.000' },
+      { name:'Gaseosa 1.5L',                    desc:'',                                              price:'8.000' },
+      { name:'Gaseosa 500ml',                   desc:'',                                              price:'3.700' },
+      { name:'Hit Litro',                       desc:'',                                              price:'6.500' },
+      { name:'Hit 500ml',                       desc:'',                                              price:'3.600' },
+      { name:'Agua',                            desc:'',                                              price:'2.800' },
+      { name:'Agua con Gas',                    desc:'',                                              price:'3.200' },
+    ]
+  }
+];
+
+/* ══════════════════════════════════════════════
+   RENDER
+══════════════════════════════════════════════ */
+function buildMenu() {
+  const main = document.getElementById('menuMain');
+  const catInner = document.getElementById('catInner');
+
+  // ALL button
+  catInner.innerHTML = '<button class="cat-btn active" onclick="showCat(\'all\',this)">🍽️ Todo</button>';
+
+  MENU.forEach(cat => {
+    // Category button
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn';
+    btn.textContent = cat.icon + ' ' + cat.title;
+    btn.setAttribute('onclick', `showCat('${cat.id}',this)`);
+    catInner.appendChild(btn);
+
+    // Section
+    const section = document.createElement('section');
+    section.className = 'menu-section';
+    section.dataset.cat = cat.id;
+
+    section.innerHTML = `
+      <div class="sec-head">
+        <span class="sec-icon">${cat.icon}</span>
+        <h2 class="sec-title">${cat.title}</h2>
+        <div class="sec-line"></div>
+      </div>
+      <div class="menu-grid" id="grid-${cat.id}"></div>
+    `;
+    main.appendChild(section);
+
+    const grid = section.querySelector('.menu-grid');
+
+    cat.items.forEach(item => {
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.dataset.cat = cat.id;
+
+      const badgeHtml = item.badge
+        ? `<span class="badge ${item.badgeType || 'badge-gold'}">${item.badge}</span>`
+        : '';
+
+      card.innerHTML = `
+        <div class="card-img" style="background:${cat.bg}">${cat.icon}</div>
+        <div class="card-body">
+          <div class="card-name">${item.name}</div>
+          ${item.desc ? `<div class="card-desc">${item.desc}</div>` : '<div class="card-desc"></div>'}
+          <div class="card-foot">
+            <span class="card-price">${item.price}</span>
+            ${badgeHtml}
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  });
+}
+
+/* ══════════════════════════════════════════════
+   FILTROS
+══════════════════════════════════════════════ */
+function showCat(cat, btn) {
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('searchInput').value = '';
+
+  document.querySelectorAll('.menu-section').forEach(s => {
+    s.classList.toggle('hidden', cat !== 'all' && s.dataset.cat !== cat);
+  });
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('hidden'));
+  document.getElementById('noResults').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function filterMenu() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.cat-btn').classList.add('active');
+  document.querySelectorAll('.menu-section').forEach(s => s.classList.remove('hidden'));
+
+  if (!q) {
+    document.querySelectorAll('.card').forEach(c => c.classList.remove('hidden'));
+    document.getElementById('noResults').style.display = 'none';
+    return;
+  }
+
+  let found = 0;
+  document.querySelectorAll('.card').forEach(c => {
+    const match = c.textContent.toLowerCase().includes(q);
+    c.classList.toggle('hidden', !match);
+    if (match) found++;
+  });
+
+  document.querySelectorAll('.menu-section').forEach(s => {
+    const visible = s.querySelectorAll('.card:not(.hidden)').length;
+    s.classList.toggle('hidden', visible === 0);
+  });
+
+  document.getElementById('noResults').style.display = found === 0 ? 'block' : 'none';
+}
+
+/* INIT */
+buildMenu();
+</script>
+</body>
+</html>

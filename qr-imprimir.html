@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BurguerMax — Generar QR</title>
+  <style>
+    :root { --gold:#F5C014; --bg:#0d0d0d; --card:#1a1a1a; --border:#2a2a2a; --muted:#888; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      background:var(--bg); color:#fff;
+      font-family:'Segoe UI',system-ui,sans-serif; min-height:100vh;
+    }
+
+    /* CONFIG SCREEN */
+    #config-screen {
+      display:flex; flex-direction:column; align-items:center;
+      justify-content:center; min-height:100vh; padding:24px;
+    }
+    .cfg-logo-img {
+      width:90px; height:90px; border-radius:50%;
+      border:3px solid #fff; object-fit:cover;
+      margin-bottom:14px; display:block;
+    }
+    .cfg-title { font-size:1.8rem; font-weight:900; color:var(--gold); letter-spacing:3px; margin-bottom:4px; }
+    .cfg-sub   { font-size:.72rem; color:var(--muted); letter-spacing:2px; margin-bottom:28px; }
+
+    .cfg-card {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:14px; padding:26px 22px; width:100%; max-width:400px;
+    }
+    .step-box {
+      background:#111; border:1px solid var(--border);
+      border-radius:8px; padding:12px 14px; margin-bottom:16px;
+    }
+    .step-title { font-size:.72rem; color:var(--gold); font-weight:700; margin-bottom:6px; letter-spacing:1px; }
+    .step { font-size:.75rem; color:var(--muted); line-height:1.6; }
+    .step b { color:#fff; }
+
+    .cfg-label { font-size:.72rem; color:var(--muted); margin-bottom:6px; letter-spacing:1px; }
+    .cfg-input {
+      width:100%; background:#111; border:1px solid var(--border);
+      border-radius:8px; padding:12px 14px; color:#fff;
+      font-size:1rem; outline:none; margin-bottom:8px;
+      font-family:monospace; transition:border-color .2s;
+    }
+    .cfg-input:focus { border-color:var(--gold); }
+    .cfg-hint { font-size:.72rem; color:var(--muted); margin-bottom:20px; line-height:1.6; }
+    .cfg-hint code { color:var(--gold); font-family:monospace; }
+
+    .btn-gen {
+      width:100%; background:var(--gold); color:#000;
+      border:none; border-radius:10px; padding:14px;
+      font-size:1rem; font-weight:900; cursor:pointer; letter-spacing:1px;
+      font-family:inherit;
+    }
+    .btn-gen:active { opacity:.85; }
+
+    /* QR SCREEN */
+    #qr-screen { display:none; padding:20px; max-width:500px; margin:0 auto; }
+
+    .back-btn {
+      background:none; border:1px solid var(--border); border-radius:8px;
+      color:var(--muted); padding:8px 16px; font-size:.85rem;
+      cursor:pointer; margin-bottom:20px; font-family:inherit;
+    }
+    .back-btn:hover { border-color:var(--gold); color:var(--gold); }
+
+    /* HOJA DE IMPRESION */
+    .print-sheet {
+      background:#fff; color:#000; border-radius:12px;
+      padding:28px 20px; text-align:center;
+      max-width:360px; margin:0 auto 20px;
+    }
+    .ps-logo {
+      width:64px; height:64px; border-radius:50%;
+      border:2px solid #000; object-fit:cover;
+      margin:0 auto 8px; display:block;
+    }
+    .ps-brand   { font-size:1.3rem; font-weight:900; color:#000; letter-spacing:3px; }
+    .ps-sub     { font-size:.6rem; color:#555; letter-spacing:2px; margin-bottom:16px; }
+    #qrCode     { display:inline-block; padding:8px; background:#fff; margin-bottom:14px; }
+    #qrCode img, #qrCode canvas { display:block; }
+    .ps-divider { border:none; border-top:1px dashed #bbb; margin:12px 0; }
+    .ps-scan    { font-size:.7rem; font-weight:700; color:#111; letter-spacing:1px; margin-bottom:4px; }
+    .ps-url     { font-size:.58rem; color:#666; font-family:monospace; word-break:break-all; }
+    .ps-wifi    { font-size:.65rem; color:#888; margin-top:6px; }
+
+    /* BOTONES */
+    .action-row { display:flex; gap:10px; max-width:360px; margin:0 auto; }
+    .btn-print {
+      flex:1; background:var(--gold); color:#000; border:none;
+      border-radius:10px; padding:13px; font-size:.9rem;
+      font-weight:900; cursor:pointer; font-family:inherit;
+    }
+    .btn-dl {
+      flex:1; background:var(--card); color:#fff;
+      border:1px solid var(--border); border-radius:10px; padding:13px;
+      font-size:.9rem; font-weight:700; cursor:pointer; font-family:inherit;
+    }
+    .btn-dl:hover { border-color:var(--gold); }
+
+    .tips {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:10px; padding:14px 16px; max-width:360px;
+      margin:14px auto 0; font-size:.76rem; color:var(--muted); line-height:1.7;
+    }
+    .tips strong { color:var(--gold); }
+
+    /* PRINT */
+    @media print {
+      body { background:#fff !important; }
+      #config-screen, .back-btn, .action-row, .tips { display:none !important; }
+      #qr-screen { display:block !important; padding:0; }
+      .print-sheet { border-radius:0; margin:0; max-width:100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- PANTALLA CONFIG -->
+<div id="config-screen">
+  <img src="Max.png" class="cfg-logo-img" alt="BurguerMax">
+  <div class="cfg-title">BURGUERMAX</div>
+  <div class="cfg-sub">GENERADOR DE QR — MENU DIGITAL</div>
+
+  <div class="cfg-card">
+    <div class="step-box">
+      <div class="step-title">COMO OBTENER LA URL DEL MENU</div>
+      <div class="step">
+        1. Sube la carpeta <b>MenuBurguerMaxQR</b> a <b>netlify.com/drop</b><br>
+        2. Copia la URL que te da (ej: <b>https://tu-sitio.netlify.app/menu.html</b>)<br>
+        3. Pegala abajo y genera el QR
+      </div>
+    </div>
+
+    <div class="cfg-label">URL DEL MENU EN INTERNET</div>
+    <input class="cfg-input" id="ipInput" type="url"
+           placeholder="https://tu-sitio.netlify.app/menu.html" oninput="actualizarUrl()">
+    <div class="cfg-hint">
+      El QR apuntara a: <code id="urlPreview">—</code>
+    </div>
+
+    <button class="btn-gen" onclick="generarQR()">GENERAR QR PARA IMPRIMIR</button>
+  </div>
+</div>
+
+<!-- PANTALLA QR -->
+<div id="qr-screen">
+  <button class="back-btn" onclick="volver()">← Cambiar IP</button>
+
+  <div class="print-sheet">
+    <img src="Max.png" class="ps-logo" alt="BurguerMax">
+    <div class="ps-brand">BURGUERMAX</div>
+    <div class="ps-sub">MENU DIGITAL</div>
+    <div id="qrCode"></div>
+    <hr class="ps-divider">
+    <div class="ps-scan">ESCANEA PARA VER EL MENU</div>
+    <div class="ps-url" id="psUrl"></div>
+    <div class="ps-wifi">Escanea con cualquier celular</div>
+  </div>
+
+  <div class="action-row">
+    <button class="btn-print" onclick="window.print()">IMPRIMIR QR</button>
+    <button class="btn-dl"    onclick="descargar()">DESCARGAR PNG</button>
+  </div>
+
+  <div class="tips">
+    <strong>Recomendaciones:</strong><br>
+    • Tamano minimo de impresion: <strong>4 × 4 cm</strong><br>
+    • Pegar en cada mesa y en la entrada del local<br>
+    • Funciona con WiFi o datos moviles
+  </div>
+</div>
+
+<!-- QR Library (archivo local — offline) -->
+<script src="qrcode.min.js"></script>
+
+<script>
+var qrInstance = null;
+
+function actualizarUrl() {
+  var url = document.getElementById('ipInput').value.trim();
+  document.getElementById('urlPreview').textContent = url || '—';
+}
+
+function generarQR() {
+  var url = document.getElementById('ipInput').value.trim();
+  if (!url) {
+    alert('Pega la URL del menu\nEjemplo: https://tu-sitio.netlify.app/menu.html');
+    return;
+  }
+  if (!url.startsWith('http')) {
+    alert('La URL debe comenzar con https:// o http://');
+    return;
+  }
+  document.getElementById('psUrl').textContent = url;
+
+  // Mostrar pantalla QR
+  document.getElementById('config-screen').style.display = 'none';
+  document.getElementById('qr-screen').style.display     = 'block';
+
+  // Limpiar QR anterior
+  var wrap = document.getElementById('qrCode');
+  wrap.innerHTML = '';
+
+  // Generar nuevo QR
+  qrInstance = new QRCode(wrap, {
+    text:          url,
+    width:         240,
+    height:        240,
+    colorDark:     '#000000',
+    colorLight:    '#ffffff',
+    correctLevel:  QRCode.CorrectLevel.H
+  });
+}
+
+function volver() {
+  document.getElementById('qr-screen').style.display     = 'none';
+  document.getElementById('config-screen').style.display = 'flex';
+  qrInstance = null;
+}
+
+function descargar() {
+  var canvas = document.querySelector('#qrCode canvas');
+  if (!canvas) {
+    // QRCode genera img en algunos browsers
+    var img = document.querySelector('#qrCode img');
+    if (img) {
+      var a = document.createElement('a');
+      a.download = 'QR-BurguerMax.png';
+      a.href = img.src;
+      a.click();
+    }
+    return;
+  }
+  var a = document.createElement('a');
+  a.download = 'QR-BurguerMax.png';
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+}
+
+// Init
+actualizarUrl();
+</script>
+</body>
+</html>
