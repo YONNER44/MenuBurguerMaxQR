@@ -1,27 +1,57 @@
-# BurguerMax — Menu Digital
+# BurguerMax — Menu Digital v3.0
 
-Menu digital interactivo para BurguerMax, accesible mediante codigo QR desde cualquier celular con internet.
+Stack: React 18 + Vite + TypeScript + Tailwind CSS + Heroicons
 
-## URL de Produccion
+URL produccion: https://burguermax-menu.netlify.app
 
-- **Menu:** https://burguermax-menu.netlify.app/menu.html
-- **Generador QR:** https://burguermax-menu.netlify.app/qr-imprimir.html
+## Desarrollo local
 
-## Tecnologias
+```bash
+npm install
+npm run dev
+```
 
-- HTML5 + CSS3 + JavaScript Vanilla
-- Hosting: Netlify (gratuito)
-- QR: qrcode.min.js (libreria local)
+## Build produccion
 
-## Archivos
+```bash
+npm run build
+# output: dist/
+```
 
-| Archivo | Descripcion |
-|---|---|
-| `menu.html` | Menu digital completo — archivo principal |
-| `qr-imprimir.html` | Generador de QR para imprimir en las mesas |
-| `qrcode.min.js` | Libreria QR (local, sin dependencias externas) |
-| `index.html` | Redireccion automatica a menu.html |
-| `Max.png` | Logo oficial de BurguerMax |
+## Configuracion
+
+Edita `src/config.ts`:
+- `WHATSAPP_NUMBER` — numero con codigo de pais (ej: `573001234567`)
+- `MENU_URL` — URL del menu en Netlify
+
+## Deploy en Netlify
+
+| Parametro | Valor |
+|-----------|-------|
+| Build command | `npm run build` |
+| Publish directory | `dist` |
+| Node version | 18+ |
+| Branch | `main` |
+
+## Estructura
+
+```
+src/
+  App.tsx              — vista activa + dark mode
+  config.ts            — WhatsApp number, URL
+  data/menu.ts         — todos los productos y categorias
+  views/
+    Catalogo.tsx       — menu principal
+    GeneradorQR.tsx    — generador y descarga de QR
+  components/
+    ProductoCard.tsx
+    CategoriaFiltro.tsx
+    BotonWhatsApp.tsx
+    BottomNav.tsx
+    ToggleModo.tsx
+public/
+  Max.png              — logo
+```
 
 ## Categorias del Menu
 
@@ -35,30 +65,3 @@ Menu digital interactivo para BurguerMax, accesible mediante codigo QR desde cua
 - Creps (3 items)
 - Adicionales (14 items)
 - Bebidas (19 items)
-
-## Como usar el Generador QR
-
-1. Abrir https://burguermax-menu.netlify.app/qr-imprimir.html
-2. Pegar la URL del menu: `https://burguermax-menu.netlify.app/menu.html`
-3. Clic en **Generar QR para Imprimir**
-4. Clic en **Imprimir QR** o **Descargar PNG**
-5. Colocar el QR impreso en cada mesa y en la entrada del local
-
-## Como actualizar el menu
-
-1. Editar `menu.html` en VS Code (buscar el plato con Ctrl+F)
-2. Guardar con Ctrl+S
-3. Arrastrar la carpeta `MenuBurguerMaxQR` a **app.netlify.com/drop**
-4. Netlify actualiza automaticamente — el QR no cambia
-
-## Flujo del cliente
-
-1. Cliente llega a la mesa y ve el codigo QR
-2. Escanea con la camara de su celular
-3. Se abre el menu de BurguerMax en el navegador
-4. Navega por categorias, ve precios y descripcion de cada plato
-5. Funciona con WiFi o datos moviles — sin necesidad de app
-
-## Version
-
-- v1.0 — Menu digital con hosting online via Netlify

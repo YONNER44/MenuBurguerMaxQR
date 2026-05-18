@@ -1,0 +1,194 @@
+export interface MenuItem {
+  name: string
+  desc: string
+  price: string
+  badge?: string
+  badgeType?: 'red' | 'gold'
+}
+
+export interface MenuCategory {
+  id: string
+  title: string
+  gradient: string
+  icon: string
+  items: MenuItem[]
+}
+
+export const MENU: MenuCategory[] = [
+  {
+    id: 'hamburguesas',
+    title: 'Hamburguesas',
+    gradient: 'linear-gradient(135deg,#2d0a00,#1a0000)',
+    icon: '/Iconos/hamburguesa-con-queso.png',
+    items: [
+      { name: 'Hamburguesa Sencilla + Papas',      desc: '120gr de Carne, Lechuga, Tomate, Cebolla Grille',                                                              price: '12.000' },
+      { name: 'Combo Hamburguesas 2x1',             desc: '120gr de Carne, Lechuga, Tomate, Cebolla Grille',                                                              price: '19.500', badge: '2x1',  badgeType: 'red' },
+      { name: 'Combo Hamburguesas 2x1 + Papas',     desc: '120gr de Carne, Lechuga, Tomate, Cebolla Grille',                                                              price: '22.000', badge: '2x1',  badgeType: 'red' },
+      { name: 'Hamburguesa Doble + Papas',          desc: '120gr de Doble Carne, Lechuga, Tomate, Cebolla Grille, Queso',                                                 price: '22.000' },
+      { name: 'Hamburguesa Pollo Apanado + Papas',  desc: '120gr de Pollo Apanado, Lechuga, Tomate, Cebolla Grille',                                                      price: '14.000' },
+      { name: 'Hamburguesa Ranchera + Papas',       desc: '120gr de Carne, Chorizo Ranchero, Lechuga, Tomate, Cebolla Grille',                                            price: '19.500' },
+      { name: 'Hamburguesa Especial + Papas',       desc: '120gr de Carne, Tocineta, Lechuga, Tomate, Cebolla Grille',                                                    price: '19.500' },
+      { name: 'Hamburguesa de Guacamole + Papas',   desc: '120gr de Carne, Salsa de Guacamole, Doble Tocineta, Tomate, Cebolla Grille',                                   price: '18.500' },
+      { name: 'Hamburguesa Inglesa + Papas',        desc: '120gr de Carne, Aros de Cebolla, Tomate, Cebolla Grille',                                                      price: '19.500' },
+      { name: 'Hamburguesa Mexicana + Papas',       desc: '120gr de Carne, Chile de Carne y Frijol, Tocineta, Tomate, Cebolla Grille',                                    price: '19.500' },
+      { name: 'Hamburguesa Hawaiana + Papas',       desc: '120gr de Carne, Piña a la Plancha, Tocineta, Tomate, Cebolla Grille',                                          price: '18.500' },
+      { name: 'Hamburguesa Mixta Doble + Papas',    desc: '120gr de Carne, Pollo Apanado, Doble Tocineta, Piña a la Plancha, Lechuga, Tomate, Cebolla Grille',            price: '22.000' },
+      { name: 'Hamburguesa Habanero + Papas',       desc: '120gr de Carne, Chorizo, Doble Tocineta, Tomate, Cebolla Grille',                                              price: '19.500' },
+      { name: 'Burger Anglu + Papas',               desc: '120gr de Carne, Pechuga a la Plancha, Salsa Champiñones, Jamon, Queso Mozzarella',                             price: '22.000' },
+      { name: 'Croky Burger + Papas',               desc: '120gr de Carne, Nachos, Doble Tocineta, Salsa de Mango Picante, Queso Cheddar',                                price: '19.500' },
+      { name: 'Super Criolla + Papas',              desc: '120gr de Carne, Pollo Apanado, Huevo Frito, Porcion de Patacon',                                               price: '22.000' },
+    ],
+  },
+  {
+    id: 'perros',
+    title: 'Perros Calientes',
+    gradient: 'linear-gradient(135deg,#2d1500,#1a0800)',
+    icon: '/Iconos/Perrodos.png',
+    items: [
+      { name: 'Combo Hotdog Clasico 2x1',   desc: 'Salchicha Americana, Cebolla Grille, Huevo de Codorniz',                                  price: '15.000', badge: '2x1', badgeType: 'red' },
+      { name: 'Super Hotdog + Papas',        desc: 'Salchicha Americana, Cebolla Grille, Tocineta',                                           price: '12.500' },
+      { name: 'Hotdog Ranchero + Papas',     desc: 'Cebolla Grille, Tocineta, Chorizo Ranchero',                                              price: '13.000' },
+      { name: 'Hotdog Clasico Americano',    desc: 'Salchicha Americana, Cebolla Grille, Tocineta',                                           price: '10.500' },
+      { name: 'Hotdog Mexicano + Papas',     desc: 'Salchicha Americana, Chile de Carne y Frijol, Tocineta',                                  price: '14.500' },
+      { name: 'Hotdog Criollo + Papas',      desc: 'Cebolla Grille, Trozos de Pollo a la Plancha, Maicitos, Tocineta, Chorizo y Queso',       price: '14.500' },
+    ],
+  },
+  {
+    id: 'salchimax',
+    title: 'Salchi Max',
+    gradient: 'linear-gradient(135deg,#2d2000,#1a1200)',
+    icon: '/Iconos/salchimax.png',
+    items: [
+      { name: 'Salchipapa',           desc: 'Papa Francesa, Salchicha Americana, Queso, Huevo de Codorniz',                                                            price: '12.500' },
+      { name: 'Salchipapa Especial',  desc: 'Papa Francesa, Salchicha Americana, Queso, Huevo de Codorniz, Carne y Pollo Desmechado',                                  price: '17.000' },
+      { name: 'Choripapa',            desc: 'Papa Francesa, Chorizo, Queso, Huevo de Codorniz',                                                                        price: '13.500' },
+      { name: 'Choripapa Especial',   desc: 'Papa Francesa, Chorizo, Queso, Huevo de Codorniz, Carne y Pollo Desmechado',                                              price: '17.500' },
+      { name: 'Mega Salchi',          desc: 'Papa Francesa, Salchicha Americana, Queso, Huevo de Codorniz, Longaniza, Carne y Pollo a la Plancha en Trozos',           price: '18.500' },
+      { name: 'Salchipapa Criollo',   desc: 'Papa Criolla, Salchicha Americana, Maduritos, Queso, Carne a la Plancha en Trozos',                                       price: '18.500' },
+      { name: 'Nuggets de Pollo',     desc: 'Unidades de Nuggets, Papas Francesas, Huevos de Codorniz y Ensalada',                                                     price: '14.000' },
+    ],
+  },
+  {
+    id: 'carnes',
+    title: 'Carnes Especiales',
+    gradient: 'linear-gradient(135deg,#200000,#2d0505)',
+    icon: '/Iconos/carnesespeciales.png',
+    items: [
+      { name: 'Churrasco 300gr',                       desc: '300gr de Carne, Papas Francesas, Ensalada',                                                                         price: '28.000' },
+      { name: 'Churrasquito 250gr',                    desc: '250gr de Carne, Papas Francesas, Ensalada',                                                                         price: '25.500' },
+      { name: 'Lomo de Cerdo a la Plancha',            desc: '250gr de Carne de Cerdo, Papas Francesas, Ensalada',                                                                price: '25.500' },
+      { name: 'Lomo de Cerdo en Salsa de Champiñones', desc: '250gr de Carne de Cerdo, Papas Francesas, Ensalada',                                                                price: '27.000' },
+      { name: 'Patacon Mixto',                         desc: 'Carne y Pollo Desmechado, Maicitos, Queso, Huevo de Codorniz, Papas Francesas, Ensalada',                           price: '17.900' },
+      { name: 'Patacon Pollo con Champiñones',         desc: 'Pollo, Champiñones, Queso, Papas Francesas, Ensalada',                                                              price: '16.500' },
+      { name: 'Patacon de Res Carne Desmechada',       desc: 'Carne Desmechada, Queso, Ensalada, Papas Francesas',                                                                price: '19.000' },
+      { name: 'Patacon Ranchero',                      desc: 'Carne de Res, Tocineta, Chorizo, Papas Francesas, Ensalada',                                                        price: '19.500' },
+      { name: 'Costillas BBQ',                         desc: '350gr de Costilla, Papas Francesas, Ensalada',                                                                      price: '25.000' },
+      { name: 'Alitas BBQ',                            desc: '4 Alitas Completas, Papas a la Francesa',                                                                           price: '17.000' },
+      { name: 'Pechuga a la Plancha',                  desc: '200gr de Pechuga, Papas Francesas, Ensalada',                                                                       price: '24.000' },
+      { name: 'Pechuga en Salsa de Champiñones',       desc: '200gr de Pechuga, Papas Francesas, Ensalada',                                                                       price: '25.500' },
+      { name: 'Mixto 3 Carnes',                        desc: 'Carne, Pechuga a la Plancha, Chorizo, Papas Francesas, Ensalada',                                                   price: '28.000' },
+    ],
+  },
+  {
+    id: 'tastys',
+    title: "Tasty's",
+    gradient: 'linear-gradient(135deg,#0a0a2d,#050515)',
+    icon: '/Iconos/tastys.png',
+    items: [
+      { name: "Tasty' Ranchero",               desc: 'Papas Francesas, Maduritos, Cerdo a la Plancha, Chorizo, Tocineta',          price: '19.000' },
+      { name: "Tasty's Ropa Vieja",             desc: 'Papas Francesas, Maduritos, Carne Desmechada',                               price: '16.500' },
+      { name: "Tasty's Pollo con Champiñones",  desc: 'Papas Francesas, Maduritos, Pollo con Champiñones',                          price: '16.500' },
+      { name: "Tasty's Mixto",                  desc: 'Papas Francesas, Maduritos, Salchicha Americana, Carne de Hamburguesa',      price: '16.500' },
+      { name: "Tasty's Criollo",                desc: 'Papas Francesas, Maduritos, Tocineta, Salchicha, Maicitos, Papas en Fosforo', price: '16.500' },
+      { name: 'Mazorcada',                      desc: 'Maicitos, Pollo Desmechado, Queso, Papas en Fosforo',                       price: '16.000' },
+      { name: 'Mazorcada Mixta',                desc: 'Maicitos, Carne y Pollo Desmechado, Queso, Papas en Fosforo',               price: '16.500' },
+      { name: 'Mazorcada Ranchera',             desc: 'Maicitos, Carne Desmechada, Tocineta, Chorizo, Queso, Papas en Fosforo',    price: '17.000' },
+    ],
+  },
+  {
+    id: 'papitas',
+    title: 'Papitas y Mas',
+    gradient: 'linear-gradient(135deg,#1a1000,#0d0800)',
+    icon: '/Iconos/papitas.png',
+    items: [
+      { name: 'Desgranado',               desc: 'Trozos de Pollo y Carne a la Plancha, Chorizo, Longaniza, Papas Francesa, Maicitos y Papas en Fosforo', price: '23.000' },
+      { name: 'Parrillerito',              desc: 'Papa Criolla, Maduritos, Lomo de Cerdo, Costillas, Chorizo',                                             price: '27.000' },
+      { name: 'Parrillada',               desc: 'Pechuga, Carne de Res y Cerdo a la Plancha, Chorizo, Papas en Casco y Croquetas de Yuca',                price: '27.000' },
+      { name: 'Parrillada (3 Personas)',   desc: 'Pechuga, Carne de Res y Cerdo a la Plancha, Chorizo, Longaniza, Papas en Casco y Croquetas de Yuca',    price: '60.000', badge: '3 Personas', badgeType: 'gold' },
+      { name: 'Maduritos',                desc: 'Chorizo, Longaniza y Queso',                                                                              price: '14.500' },
+      { name: 'Nachos',                   desc: 'Chile de Carne y Frijol, Queso Cheddar',                                                                 price: '17.000' },
+    ],
+  },
+  {
+    id: 'pizzas',
+    title: 'Pizzas',
+    gradient: 'linear-gradient(135deg,#1a0d00,#2d1500)',
+    icon: '/Iconos/pizza.png',
+    items: [
+      { name: 'Pizza Familiar',                 desc: '8 Porciones',                                  price: '60.000', badge: '8 Porciones', badgeType: 'gold' },
+      { name: 'Pizza Pollo con Champiñones',     desc: 'Pollo, Champiñones, Queso',                    price: '8.000' },
+      { name: 'Pizza Hawaiana',                  desc: 'Piña, Jamon, Queso',                           price: '8.000' },
+      { name: 'Pizza Criolla',                   desc: 'Carne Desmechada, Maicitos, Jamon, Queso',     price: '8.000' },
+    ],
+  },
+  {
+    id: 'creps',
+    title: 'Creps',
+    gradient: 'linear-gradient(135deg,#1a0d05,#0d0500)',
+    icon: '/Iconos/crepes.png',
+    items: [
+      { name: 'Crep de Dulce con Helado + Papas',   desc: 'Crep dulce con helado acompañado de papas',      price: '16.500' },
+      { name: 'Crep Pollo con Champiñones + Papas',  desc: 'Crep relleno de pollo con champiñones y papas',  price: '16.500' },
+      { name: 'Crep Ropa Vieja + Papas',             desc: 'Crep relleno de carne desmechada y papas',       price: '16.500' },
+    ],
+  },
+  {
+    id: 'adicionales',
+    title: 'Adicionales',
+    gradient: 'linear-gradient(135deg,#111111,#1c1c1c)',
+    icon: '/Iconos/adicionales.png',
+    items: [
+      { name: 'Porcion Papas a la Francesa',  desc: '',    price: '5.500' },
+      { name: 'Porcion Maduritos',            desc: '',    price: '4.000' },
+      { name: 'Porcion Aros de Cebolla',      desc: '',    price: '6.000' },
+      { name: 'Porcion Huevos de Codorniz',   desc: 'x10', price: '6.000' },
+      { name: 'Porcion Tocineta',             desc: '',    price: '1.600' },
+      { name: 'Porcion Chorizo',              desc: '',    price: '3.000' },
+      { name: 'Porcion Salchicha Americana',  desc: '',    price: '2.800' },
+      { name: 'Porcion de Yuca',              desc: '',    price: '4.000' },
+      { name: 'Porcion Carne de Hamburguesa', desc: '',    price: '6.000' },
+      { name: 'Porcion Jalapenos',            desc: '',    price: '5.500' },
+      { name: 'Porcion de Queso',             desc: '',    price: '1.500' },
+      { name: 'Porcion Papa Criolla',         desc: '',    price: '6.000' },
+      { name: 'Porcion Papas en Casco',       desc: '',    price: '6.000' },
+      { name: 'Porcion Pollo Apanado',        desc: '',    price: '6.000' },
+    ],
+  },
+  {
+    id: 'bebidas',
+    title: 'Bebidas',
+    gradient: 'linear-gradient(135deg,#001a10,#000d07)',
+    icon: '/Iconos/bebidas.png',
+    items: [
+      { name: 'Limonada de Mango Biche',        desc: 'Limonada natural de mango biche',               price: '8.000' },
+      { name: 'Limonada Natural',               desc: 'Limonada natural tradicional',                   price: '5.500' },
+      { name: 'Limonada de Coco',               desc: 'Limonada con coco',                              price: '8.000' },
+      { name: 'Limonada de Panela',             desc: 'Limonada endulzada con panela',                  price: '6.000' },
+      { name: 'Limonada de Hierba Buena',       desc: 'Limonada con hierba buena fresca',               price: '6.000' },
+      { name: 'Limonada de Coco Frutos Rojos',  desc: 'Limonada de coco con frutos rojos',              price: '8.000' },
+      { name: 'Cerezada',                       desc: 'Bebida de cereza natural',                       price: '8.000' },
+      { name: 'Mandarinade',                    desc: 'Bebida natural de mandarina',                    price: '8.000' },
+      { name: 'Bebida de Coco Cafe',            desc: 'Bebida especial de coco con cafe',               price: '9.500' },
+      { name: 'Jugos en Leche',                 desc: 'Guanabana, Mora, Fresa, Maracuya, Mango, Lulo',  price: '7.000' },
+      { name: 'Jugos Naturales',                desc: 'Guanabana, Mora, Fresa, Maracuya, Mango, Lulo',  price: '5.500' },
+      { name: 'Cerveza en Lata',                desc: '',                                               price: '6.000' },
+      { name: 'Club Colombia',                  desc: '',                                               price: '6.000' },
+      { name: 'Gaseosa 1.5L',                   desc: '',                                               price: '8.000' },
+      { name: 'Gaseosa 500ml',                  desc: '',                                               price: '3.700' },
+      { name: 'Hit Litro',                      desc: '',                                               price: '6.500' },
+      { name: 'Hit 500ml',                      desc: '',                                               price: '3.600' },
+      { name: 'Agua',                           desc: '',                                               price: '2.800' },
+      { name: 'Agua con Gas',                   desc: '',                                               price: '3.200' },
+    ],
+  },
+]
