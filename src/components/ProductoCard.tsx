@@ -98,6 +98,8 @@ export default function ProductoCard({ item, category, adminMode }: Props) {
           key={imgKey}
           src={imagePath}
           alt={item.name}
+          loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover"
           onError={() => setHasImg(false)}
         />
