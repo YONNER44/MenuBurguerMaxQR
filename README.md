@@ -18,6 +18,12 @@ npm run build
 # output: dist/
 ```
 
+## Preview build local
+
+```bash
+npm run preview
+```
+
 ## Configuracion
 
 Edita `src/config.ts`:
@@ -37,31 +43,73 @@ Edita `src/config.ts`:
 
 ```
 src/
-  App.tsx              — vista activa + dark mode
-  config.ts            — WhatsApp number, URL
-  data/menu.ts         — todos los productos y categorias
+  App.tsx              — estado global: vista activa + dark mode (localStorage)
+  config.ts            — WHATSAPP_NUMBER, MENU_URL
+  data/menu.ts         — todos los productos, categorias, precios y badges
   views/
-    Catalogo.tsx       — menu principal
-    GeneradorQR.tsx    — generador y descarga de QR
+    Catalogo.tsx       — menu principal con filtro por categoria
+    GeneradorQR.tsx    — generador y descarga de QR como imagen
   components/
-    ProductoCard.tsx
-    CategoriaFiltro.tsx
-    BotonWhatsApp.tsx
-    BottomNav.tsx
-    ToggleModo.tsx
+    ProductoCard.tsx   — tarjeta de producto con imagen, nombre, precio y badge
+    CategoriaFiltro.tsx — tabs de filtro horizontal
+    BotonWhatsApp.tsx  — boton flotante de contacto
+    BottomNav.tsx      — navegacion inferior (Catalogo / QR)
+    ToggleModo.tsx     — switch dark/light mode
 public/
   Max.png              — logo
+  Iconos/              — iconos de categoria (11 archivos PNG)
+  productos/           — imagenes de productos por categoria (96+ archivos)
+scripts/
+  optimize-images.mjs  — optimiza y redimensiona imagenes en public/productos/
 ```
+
+## Scripts utiles
+
+```bash
+# Optimizar imagenes en public/productos/ (requiere sharp)
+node scripts/optimize-images.mjs
+```
+
+El script redimensiona a max 800px y convierte a JPEG con calidad 78 (mozjpeg).
+
+## Backend (XAMPP local)
+
+Ubicacion: `../backend/`
+
+| Archivo | Funcion |
+|---------|---------|
+| `upload.php` | Recibe imagen, la redimensiona (max 800px, GD) y la guarda en `public/productos/{categoria}/` |
+| `admin-imagenes.html` | Interfaz de carga de imagenes por categoria y producto |
+
+Proxy en dev: `/upload.php` → `http://localhost/Proyecto_menu_digital_burguermax`
+
+## Agregar producto al menu
+
+1. Editar `src/data/menu.ts`
+2. Localizar la categoria en `MENU[]`
+3. Agregar objeto `MenuItem` con `name`, `desc`, `price` y opcionalmente `badge` / `badgeType`
+4. Colocar imagen en `public/productos/{id-categoria}/nombre-slug.jpg`
+
+## Badges disponibles
+
+| `badgeType` | Color | Uso tipico |
+|-------------|-------|------------|
+| `'red'`     | Rojo  | Promociones 2x1 |
+| `'gold'`    | Dorado | Porciones especiales / combos grandes |
 
 ## Categorias del Menu
 
-- Hamburguesas (16 items)
-- Perros Calientes (6 items)
-- Salchi Max (7 items)
-- Carnes Especiales (13 items)
-- Tasty's (8 items)
-- Papitas y Mas (6 items)
-- Pizzas (4 items)
-- Creps (3 items)
-- Adicionales (14 items)
-- Bebidas (19 items)
+| Categoria | Items | ID |
+|-----------|-------|----|
+| Hamburguesas | 17 | `hamburguesas` |
+| Perros Calientes | 6 | `perros` |
+| Salchi Max | 7 | `salchimax` |
+| Carnes Especiales | 13 | `carnes` |
+| Tasty's | 8 | `tastys` |
+| Papitas y Mas | 6 | `papitas` |
+| Pizzas | 4 | `pizzas` |
+| Creps | 3 | `creps` |
+| Adicionales | 14 | `adicionales` |
+| Bebidas | 19 | `bebidas` |
+
+**Total: 97 items**
