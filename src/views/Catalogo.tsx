@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { MENU } from '../data/menu'
 import ProductoCard from '../components/ProductoCard'
@@ -14,6 +14,20 @@ interface Props {
 export default function Catalogo({ darkMode, onToggleDarkMode }: Props) {
   const [activeCategory, setActiveCategory] = useState('all')
   const [query, setQuery] = useState('')
+  const [adminMode, setAdminMode] = useState(false)
+  const logoClickCount = useRef(0)
+  const logoTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  function handleLogoClick() {
+    logoClickCount.current += 1
+    if (logoTimer.current) clearTimeout(logoTimer.current)
+    if (logoClickCount.current >= 5) {
+      setAdminMode(prev => !prev)
+      logoClickCount.current = 0
+      return
+    }
+    logoTimer.current = setTimeout(() => { logoClickCount.current = 0 }, 2000)
+  }
 
   const handleCategorySelect = (id: string) => {
     setActiveCategory(id)
@@ -47,7 +61,11 @@ export default function Catalogo({ darkMode, onToggleDarkMode }: Props) {
         <header className="bg-white dark:bg-black border-b-2 border-[#F5C014] px-4 py-2.5">
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border-2 border-stone-300 dark:border-white/80 bg-[#F5C014] overflow-hidden shrink-0">
+              <div
+                className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border-2 border-stone-300 dark:border-white/80 bg-[#F5C014] overflow-hidden shrink-0 cursor-pointer select-none"
+                onClick={handleLogoClick}
+                title={adminMode ? 'Modo admin activo' : ''}
+              >
                 <img
                   src="/Max.png"
                   alt="BurguerMax"
@@ -64,6 +82,11 @@ export default function Catalogo({ darkMode, onToggleDarkMode }: Props) {
                 </div>
               </div>
             </div>
+            {adminMode && (
+              <span className="text-[0.6rem] font-bold bg-[#F5C014] text-black px-2 py-0.5 rounded-full uppercase tracking-wide">
+                Admin
+              </span>
+            )}
             <ToggleModo dark={darkMode} onToggle={onToggleDarkMode} />
           </div>
         </header>
@@ -121,9 +144,13 @@ export default function Catalogo({ darkMode, onToggleDarkMode }: Props) {
                 <div className="flex-1 h-px bg-stone-200 dark:bg-[#2a2a2a]" />
               </div>
 
-              <div className="grid gap-2 sm:gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+              <div className={`grid gap-2 sm:gap-3 ${
+                cat.id === 'bebidas'
+                  ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+                  : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'
+              }`}>
                 {cat.items.map((item, i) => (
-                  <ProductoCard key={i} item={item} category={cat} />
+                  <ProductoCard key={i} item={item} category={cat} adminMode={adminMode} />
                 ))}
               </div>
             </section>
